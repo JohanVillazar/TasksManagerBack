@@ -38,19 +38,18 @@ export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Buscar usuario
         const user = await User.findOne({ where: { email } });
         if (!user) {
             return res.status(404).json({ message: "Usuario no encontrado" });
         }
 
-        // Verificar contraseña
+      
         const validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword) {
             return res.status(401).json({ message: "Usuario o Contraseña incorrectos" });
         }
 
-        // Generar token
+       
         const token = jwt.sign({ id: user.id, email: user.email, name: user.name,  role: user.role }, SECRET_KEY, { expiresIn: "2h" });
 
         res.json({ message: "Login exitoso", name:user.name,email, phone:user.phone, role:user.role, createdAt:user.createdAt,  token });
@@ -89,7 +88,7 @@ export const sendPasswordReset = async (req, res) => {
     });
 
     // Enlace para el frontend
-    const resetLink = `http://localhost:5173/reset-password/${resetToken}`;
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
     // Enviar el correo
     await transporter.sendMail({
