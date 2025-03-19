@@ -9,11 +9,26 @@ import { adminMiddleware } from "./middlewares/adminmiddleware.js";
 
 
 const app = express();
+
 app.use(express.json());
-app.use(cors({
-    origin: "https://task-manager-ten-rose-74.vercel.app/", 
-    credentials: true
+
+const allowedOrigins = [
+    'https://task-manager-ten-rose-74.vercel.app', // tu dominio real
+  ];
+
+  app.use(cors({
+    origin: function (origin, callback) {
+     
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('No permitido por CORS'));
+      }
+    },
+    credentials: true,
   }));
+
+
 
 
 app.use("/api/users", userRoutes);
