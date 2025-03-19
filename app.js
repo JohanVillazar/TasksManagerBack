@@ -10,11 +10,10 @@ import { adminMiddleware } from "./middlewares/adminmiddleware.js";
 
 const app = express();
 app.use(express.json());
-app.use(cors(
-
-    origin=["http://localhost:5173", "https://task-manager-ten-rose-74.vercel.app/"]
-
-));
+app.use(cors({
+    origin: "https://task-manager-ten-rose-74.vercel.app/", 
+    credentials: true
+  }));
 
 
 app.use("/api/users", userRoutes);
